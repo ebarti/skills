@@ -96,6 +96,7 @@ SCOPE="user"
 DRY_RUN=0
 SELECTED=""
 NONINTERACTIVE=0
+NO_CLONE=0
 
 usage() {
   cat <<EOF
@@ -110,6 +111,7 @@ ${BOLD}Options:${RESET}
   --project             Symlink into the current directory (project scope) instead of user/global
   --user                Symlink into the user/global config (default)
   --clone-dir <path>    Where to keep the managed clone (default: \$SKILLS_HOME or ~/.skills-from-books)
+  --source <path>       Use an existing skills dir as-is (no git clone/pull); used by the Homebrew wrapper
   --list                List the skills that would be installed, then exit
   --dry-run             Print actions without writing anything
   -h, --help            Show this help
@@ -129,6 +131,8 @@ while [ $# -gt 0 ]; do
     --user)        SCOPE="user";;
     --clone-dir)   shift; CLONE_DIR="${1:?--clone-dir needs a path}";;
     --clone-dir=*) CLONE_DIR="${1#*=}";;
+    --source)      shift; CLONE_DIR="${1:?--source needs a path}"; NO_CLONE=1;;
+    --source=*)    CLONE_DIR="${1#*=}"; NO_CLONE=1;;
     --dry-run)     DRY_RUN=1;;
     --list)        LIST_ONLY=1;;
     -h|--help)     usage; exit 0;;
@@ -143,6 +147,14 @@ run() {  # echo + execute, respecting --dry-run
 
 # ---- obtain / update the managed clone ---------------------------------------
 ensure_clone() {
+  # --source: use a pre-existing skills directory as-is (e.g. a Homebrew Cellar
+  # path). No git involved; updates happen via whatever manages that dir.
+  if [ "$NO_CLONE" -eq 1 ]; then
+    [ -d "$CLONE_DIR" ] || { err "--source path not found: $CLONE_DIR"; exit 1; }
+    info "${DIM}Using skills source:${RESET} $CLONE_DIR"
+    return
+  fi
+
   # If the script lives inside a git checkout of this repo, treat that as the
   # managed clone (the user already cloned it; let them manage it in place)
   # unless they explicitly asked for a different --clone-dir / $SKILLS_HOME.
@@ -277,4 +289,8 @@ done
 
 info ""
 ok "Done."
-info "${DIM}Update everything later with:${RESET} cd \"$CLONE_DIR\" && git pull"
+if [ "$NO_CLONE" -eq 1 ]; then
+  info "${DIM}Skills update in place when you run:${RESET} brew upgrade skills"
+else
+  info "${DIM}Update everything later with:${RESET} cd \"$CLONE_DIR\" && git pull"
+fi

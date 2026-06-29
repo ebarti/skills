@@ -18,6 +18,17 @@ Think of it as **giving your agent a bookshelf**: instead of re-explaining RAG a
 
 ## ⚡ Quick install
 
+### Homebrew (recommended on macOS/Linux)
+
+```bash
+brew install ebarti/tap/skills
+ebarti-skills            # interactive picker → symlinks into the agents you choose
+```
+
+Homebrew keeps the skills at a stable path and `brew upgrade` refreshes them in place — every agent picks up new content automatically. The `ebarti-skills` command accepts the same flags as the script below (`--all`, `--targets`, `--project`, `--dry-run`, …).
+
+### From source (clone + symlink)
+
 The `install.sh` script clones this repo into one managed location, then **symlinks** the skills into whichever agents you choose. Because every install points back to the same clone, you update them all at once with a single `git pull`.
 
 ```bash
