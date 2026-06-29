@@ -16,25 +16,62 @@ Think of it as **giving your agent a bookshelf**: instead of re-explaining RAG a
 - **Composable.** Several skills (e.g. the JobHunter resume trio, the Context Engine stack) are designed to chain together into pipelines.
 - **Portable.** Plain Markdown, no runtime lock-in. Works wherever your agent can read files.
 
-## 📦 How to use these skills
+## ⚡ Quick install
 
-Each skill is a self-contained folder: a `SKILL.md` (name, description, and an index of what's inside) plus reference files. Use it however your agent loads knowledge.
-
-**With Claude Code / Claude apps** — copy the folder into a skills directory and Claude surfaces it automatically when a task matches its description (or invoke it explicitly with `/<skill-name>`):
+The `install.sh` script clones this repo into one managed location, then **symlinks** the skills into whichever agents you choose. Because every install points back to the same clone, you update them all at once with a single `git pull`.
 
 ```bash
-# project-level
-cp -r ai-rag-and-agents /path/to/your/project/.claude/skills/
-
-# or user-level (available everywhere)
-cp -r ai-rag-and-agents ~/.claude/skills/
+git clone https://github.com/ebarti/skills.git
+cd skills
+./install.sh
 ```
 
-**With any other agent** — point your retrieval/tooling at the folder. Common patterns:
+You'll get an interactive picker:
+
+```
+Where should the skills be installed?
+  1) Claude (Claude Code / Claude apps)
+  2) Codex (OpenAI Codex CLI / IDE / app)
+  3) Gemini CLI (bundled as an extension)
+  4) Antigravity (Google agentic IDE)
+  a) All of the above
+
+Select (e.g. 1,3 or a):
+```
+
+Or skip the prompt:
+
+```bash
+./install.sh --all                      # every supported agent
+./install.sh --targets claude,codex     # a subset
+./install.sh --project                  # symlink into the current repo (project scope)
+./install.sh --dry-run --all            # preview, change nothing
+./install.sh --help
+```
+
+**Where skills land** (user/global scope — all use the open `SKILL.md` format):
+
+| Agent | Install location |
+|-------|------------------|
+| **Claude** | `~/.claude/skills/` |
+| **Codex** | `~/.agents/skills/` |
+| **Gemini** | `~/.gemini/extensions/skills-from-books/skills/` (+ a generated extension manifest) |
+| **Antigravity** | `~/.gemini/antigravity/skills/` |
+
+**Update everything later:**
+
+```bash
+cd ~/.skills-from-books && git pull     # or your clone dir; all symlinked installs update instantly
+```
+
+## 📦 Manual / other agents
+
+Each skill is a self-contained folder — a `SKILL.md` (name, description, and an index of what's inside) plus reference files — so you can wire it into any agent that reads files:
 
 - Use each skill's `description` for routing/selection, then load `SKILL.md` and pull reference files on demand (the progressive-disclosure pattern these skills are built for).
 - Index the Markdown files in your own RAG store.
 - Drop the relevant `SKILL.md` straight into a system prompt for smaller tasks.
+- Or just copy a folder where you want it: `cp -r ai-rag-and-agents ~/.claude/skills/`.
 
 > 💡 Want to make your own? This repo was built with the **`skill-from-book`** approach, which converts a book's markdown into a structured skill package.
 
