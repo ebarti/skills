@@ -152,4 +152,6 @@ Got a book worth turning into a skill? Convert its markdown into a structured pa
 
 ## 📜 License
 
-Skills distill *concepts and frameworks* from their source books into original reference material; they do not reproduce the books. All credit for the underlying ideas goes to the respective authors and publishers. Please buy the books — they're excellent.
+Licensed under the [MIT License](LICENSE) — free to use, modify, and redistribute, **as long as the copyright/attribution notice is preserved**. © 2026 Eloi Barti (@ebarti).
+
+Note on sources: skills distill *concepts and frameworks* from their source books into original reference material; they do not reproduce the books. All credit for the underlying ideas goes to the respective authors and publishers. Please buy the books — they're excellent.
