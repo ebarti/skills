@@ -1,10 +1,12 @@
 # 📚 Skills from Books
 
-> Turn the best technical books into **Claude Skills** — structured, context-efficient knowledge packages your AI agent can actually use.
+> Turn the best technical books into **agent skills** — structured, context-efficient knowledge packages any AI agent can actually use.
 
-This repo is a growing library of [Claude Skills](https://docs.anthropic.com/en/docs/claude-code/skills) distilled from technical books. Each skill takes the durable knowledge from a book — the mental models, decision frameworks, and trade-offs — and packages it into progressive-disclosure reference files an agent loads only when it's relevant.
+This repo is a growing library of skills distilled from technical books. Each skill takes the durable knowledge from a book — the mental models, decision frameworks, and trade-offs — and packages it into progressive-disclosure reference files an agent loads only when it's relevant.
 
-Think of it as **giving Claude a bookshelf**: instead of re-explaining RAG architecture, distributed-systems trade-offs, or resume strategy every time, you drop in a skill and the agent already knows the book.
+**Agent-agnostic by design.** Each skill is just a folder of Markdown: a `SKILL.md` index plus reference files. Nothing here is tied to a specific runtime. It follows the [Agent Skills](https://docs.anthropic.com/en/docs/claude-code/skills) format (which Claude Code and Claude apps read natively), but the same files work with any agent that can read Markdown and load files on demand — LangGraph, custom RAG pipelines, OpenAI/Gemini-based agents, your own orchestrator, or even a human.
+
+Think of it as **giving your agent a bookshelf**: instead of re-explaining RAG architecture, distributed-systems trade-offs, or resume strategy every time, you drop in a skill and the agent already knows the book.
 
 ## 🚀 Why this exists
 
@@ -12,10 +14,13 @@ Think of it as **giving Claude a bookshelf**: instead of re-explaining RAG archi
 - **Progressive disclosure.** Skills load a tiny `SKILL.md` index first, then pull deeper reference files on demand — so you spend context only where it matters.
 - **Battle-tested sources.** Every skill names its book and chapters. No hand-wavy "best practices" — traceable knowledge.
 - **Composable.** Several skills (e.g. the JobHunter resume trio, the Context Engine stack) are designed to chain together into pipelines.
+- **Portable.** Plain Markdown, no runtime lock-in. Works wherever your agent can read files.
 
 ## 📦 How to use these skills
 
-Copy any skill folder into your Claude skills directory:
+Each skill is a self-contained folder: a `SKILL.md` (name, description, and an index of what's inside) plus reference files. Use it however your agent loads knowledge.
+
+**With Claude Code / Claude apps** — copy the folder into a skills directory and Claude surfaces it automatically when a task matches its description (or invoke it explicitly with `/<skill-name>`):
 
 ```bash
 # project-level
@@ -25,9 +30,13 @@ cp -r ai-rag-and-agents /path/to/your/project/.claude/skills/
 cp -r ai-rag-and-agents ~/.claude/skills/
 ```
 
-Claude will automatically surface the skill when your task matches its description. You can also invoke one explicitly with `/<skill-name>` in Claude Code.
+**With any other agent** — point your retrieval/tooling at the folder. Common patterns:
 
-> 💡 Want to make your own? This repo was built with the **`skill-from-book`** skill, which converts a book's markdown into a structured skill package.
+- Use each skill's `description` for routing/selection, then load `SKILL.md` and pull reference files on demand (the progressive-disclosure pattern these skills are built for).
+- Index the Markdown files in your own RAG store.
+- Drop the relevant `SKILL.md` straight into a system prompt for smaller tasks.
+
+> 💡 Want to make your own? This repo was built with the **`skill-from-book`** approach, which converts a book's markdown into a structured skill package.
 
 ---
 
@@ -87,11 +96,11 @@ A composable pipeline (the **JobHunter** trio) that analyzes a job, writes a tai
 
 ## 🏷️ Topics
 
-`claude` · `claude-code` · `claude-skills` · `ai-agents` · `llm` · `rag` · `prompt-engineering` · `ai-engineering` · `context-engineering` · `mcp` · `distributed-systems` · `ddia` · `data-engineering` · `multi-agent-systems` · `agentic-ai` · `knowledge-base`
+`agent-skills` · `ai-agents` · `agentic-ai` · `llm` · `rag` · `prompt-engineering` · `ai-engineering` · `context-engineering` · `mcp` · `distributed-systems` · `ddia` · `data-engineering` · `multi-agent-systems` · `knowledge-base` · `claude` · `claude-skills`
 
 ## 🤝 Contributing
 
-Got a book worth turning into a skill? Use the `skill-from-book` skill to convert its markdown into a structured package, then open a PR. Each skill should name its source book and chapters so the knowledge stays traceable.
+Got a book worth turning into a skill? Convert its markdown into a structured package (the `skill-from-book` approach), then open a PR. Each skill should name its source book and chapters so the knowledge stays traceable.
 
 ## 📜 License
 
